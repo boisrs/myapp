@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/myHomePage.dart';
+import 'package:myapp/Login/LoginPage.dart';
+
 
 void main(){
   runApp(myapp());
@@ -27,14 +28,14 @@ class myapp extends StatelessWidget {
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           selectedLabelStyle: TextStyle(fontSize: 25,color: Colors.white),
           unselectedLabelStyle: TextStyle(fontSize: 14,color: Colors.white),
-          
+
         )
 
       ),
 
 
 
-      home: myHomePage(),
+      home: LoginPage(),
     );
   }
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/CardMember.dart';
+import 'package:myapp/Login/LoginPage.dart';
 import 'package:myapp/MessagePage.dart';
 import 'package:myapp/ServicePage.dart';
 import 'package:myapp/SettingPage.dart';
 import 'package:myapp/drawer_menu.dart';
 
+
+
 const List screenPage=[
-  CardMember(),
+  LoginPage(),
   MessagePage(),
   SettingPage(),
   ServicePage()
@@ -21,7 +23,7 @@ class myHomePage extends StatefulWidget {
 }
 
 class _myHomePageState extends State<myHomePage> {
-  int selectidx = 0;
+  int selectidx = 1;
 
   void onTabTapped(int idx){
     setState(() {
@@ -32,15 +34,20 @@ class _myHomePageState extends State<myHomePage> {
 
   Widget BNavagateBar(){
     return BottomNavigationBar(
+      selectedItemColor: Colors.white,
+      selectedLabelStyle: TextStyle(
+        fontSize: 20.0,
+        fontWeight: FontWeight.bold
+      ),
       type: BottomNavigationBarType.fixed,
-      iconSize: 28,
+      iconSize: 20,
       backgroundColor: Colors.amber[800],
       currentIndex: selectidx,
       onTap: onTabTapped,
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.card_membership, color: Colors.white,),
-          label: 'ບັດ',
+          label: 'ເຂົ້າສູ້ລະບົບ',
           ),
           BottomNavigationBarItem(
           icon: Icon(Icons.message, color: Colors.white,),

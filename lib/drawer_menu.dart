@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:myapp/ShowListDataPage.dart';
 
 class drawer_menu extends StatefulWidget {
   const drawer_menu({super.key});
@@ -44,6 +45,9 @@ class _drawer_menuState extends State<drawer_menu> {
                 ),
                 onTap: () {
                   Navigator.of(context).pop();
+
+                  MaterialPageRoute route = MaterialPageRoute(builder: (c)=> ShowListDataPage());
+                  Navigator.of(context).push(route);
                 },
               ),
             ),
