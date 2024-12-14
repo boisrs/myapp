@@ -26,7 +26,7 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
   List data = [];
   final String url =
       "http://localhost:8000/book"; //ລັນໃນເຄື່ອງໃຫ້ໃສ local EX: http://localhost:8000/book //
-  //ລັນຢູ່ເຄື່ອງອື່ນໃສ່ IP ຂອງເຕື່ອງນັ້ນໆ EX :http://192.168.253.54:8000/book //
+  //ລັນຢູ່ເຄື່ອງອື່ນໃສ່ IP ຂອງເຕື່ອງນັ້ນໆ EX :http://192.168.194.54:8000/book //
 
   @override
   void initState() {

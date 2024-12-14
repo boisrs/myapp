@@ -6,7 +6,14 @@ import 'package:myapp/ServicePage.dart';
 import 'package:myapp/SettingPage.dart';
 import 'package:myapp/drawer_menu.dart';
 
-
+List items=["ຈັດການຂໍ້ມູນພື້ນຖານ","ຂາຍ","ສັ່ງຊື້","ນຳເຂົ້າ","ຄົ້ນຫາ","ລາຍງານ"];
+List icon=[Icon(Icons.folder,size: 25,color:Colors.blue,),
+          Icon(Icons.shopping_basket,size: 25,),
+          Icon(Icons.arrow_back,size: 25,),
+          Icon(Icons.arrow_forward,size: 25,),
+          Icon(Icons.search,size: 25,),
+          Icon(Icons.bar_chart_sharp,size: 25,),
+];
 
 const List screenPage=[
   LoginPage(),
@@ -112,18 +119,68 @@ class _myHomePageState extends State<myHomePage> {
       ]);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('ຮ້ານ Cafe Neverland'),
-        actions: [PopUpMenuitemBar(),],
+  Widget TabBarMenu(){
+    return TabBar(
+      isScrollable: true,
+      labelStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 21
+      ),
+      unselectedLabelStyle: TextStyle(
+        fontSize: 18
       ),
 
-      body: screenPage[selectidx],
-      drawer: drawer_menu(),
+      tabs: [
+      Tab(
+        icon: icon[0],
+        text: items[0],
+      ),
+      Tab(
+        icon: icon[1],
+        text: items[1],
+      ),
+      Tab(
+        icon: icon[2],
+        text: items[2],
+      ),
+      Tab(
+        icon: icon[3],
+        text: items[3],
+      ),
+      Tab(
+        icon: icon[4],
+        text: items[4],
+      ),
+      Tab(
+        icon: icon[5],
+        text: items[5],
+      ),
+      
+      
+    ],);
+  }
 
-      bottomNavigationBar: BNavagateBar(),
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: items.length,
+      child: Scaffold(
+        appBar: AppBar(
+      
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: TabBarMenu(),
+          ),
+      
+          title: Text('ຮ້ານ Cafe Neverland'),
+          actions: [PopUpMenuitemBar(),],
+        ),
+      
+        body: screenPage[selectidx],
+        drawer: drawer_menu(),
+      
+        bottomNavigationBar: BNavagateBar(),
+      ),
     );
   }
 }
