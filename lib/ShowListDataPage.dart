@@ -12,6 +12,8 @@ class ShowListDataPage extends StatefulWidget {
 }
 
 class _ShowListDataPageState extends State<ShowListDataPage> {
+  String bid="";
+
   var f = NumberFormat("#,##0.00");
 
   TextEditingController txtsearch = TextEditingController();
@@ -60,7 +62,30 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
     } catch (e) {}
   }
 
-  
+  Future<void> EditBookData(String bid, String bname, String bprice, String bpage) async {
+    try {
+      final String urladd = "http://localhost:8000/book/$bid";
+      final respon = await http.put(Uri.parse(urladd),
+          headers: {"content-type": "application/json"},
+          body: json.encode({
+            
+            "bookname": bname,
+            "bprice": bprice,
+            "bpage": bpage
+          }));
+
+      if (respon.statusCode == 200) {
+        print("ແກ້ໄຂຂໍ້ມູນແລ້ວ ${respon.body}");
+      } else {
+        print("ເກີດຂໍ້ຜິດພາດ ${respon.statusCode}");
+      }
+
+      fetchAllData();
+      bid="";
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<void> AddBookData(
       String bid, String bname, String bprice, String bpage) async {
@@ -75,13 +100,18 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
             "bpage": bpage
           }));
 
-      if (respon.statusCode == 200) {
+      setState(() {
+        if (respon.statusCode == 200) {
         print("ບັນທຶກຂໍ້ມູນແລ້ວ ${respon.body}");
+        bid="";
       } else {
         print("ເກີດຂໍ້ຜິດພາດ ${respon.statusCode}");
       }
-
       fetchAllData();
+      
+      });
+
+      
     } catch (e) {
       print(e);
     }
@@ -204,10 +234,16 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
                       elevation: 15,
                       shadowColor: Color.fromARGB(255, 61, 104, 56)),
                   onPressed: () {
-                    AddBookData(txtid.text, txtbname.text, txtbprice.text,
-                        txtbpage.text);
-                    ClearText();
-                    Navigator.of(context).pop();
+                    if(bid !=""){
+                      EditBookData(txtid.text, txtbname.text, txtbprice.text,txtbpage.text);
+                      ClearText();
+                      
+                    } else
+                      AddBookData(txtid.text, txtbname.text, txtbprice.text,txtbpage.text);
+                      ClearText();
+                      Navigator.of(context).pop();
+                    
+                    
                   },
                   child: Text(
                     'ບັນທຶກຂໍ້ມູນ',
@@ -353,6 +389,7 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
                         children: [
                           IconButton(
                               onPressed: () {
+                                bid ='${getdata['bid']}';
                                 txtid.text = '${getdata['bid']}';
                                 txtbname.text = '${getdata['bookname']}';
                                 txtbprice.text = '${getdata['bprice']}';
@@ -409,7 +446,7 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green.shade900,
         onPressed: () {
-          ClearText();
+          
           AddBook();
         },
         child: Icon(

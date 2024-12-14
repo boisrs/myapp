@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:myapp/Login/LoginPage.dart';
 import 'package:myapp/MessagePage.dart';
 import 'package:myapp/ServicePage.dart';
@@ -30,6 +31,52 @@ class _myHomePageState extends State<myHomePage> {
       selectidx = idx;
     });
 
+  }
+  Widget PopUpMenuitemBar(){
+    return PopupMenuButton <String>(itemBuilder: (c)=>[
+      PopupMenuDivider(),
+      PopupMenuItem(child: ListTile(
+        leading:Icon(Icons.settings,
+        color: Colors.amber.shade900,),
+        title: Text("ຕັ້ງຄ່າ",
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 20
+        ),
+        ),
+        onTap: (){
+          Navigator.of(context).pop();
+        },
+      )),
+      PopupMenuDivider(),
+      PopupMenuItem(child: ListTile(
+        leading:Icon(Icons.storage,
+        color: Colors.amber.shade900,),
+        title: Text("ເຊື່ອມຕໍ່ກັບຖານຂໍ້ມູນ",
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 20
+        ),
+        ),
+        onTap: (){
+          Navigator.of(context).pop();
+        },
+      )),
+      PopupMenuDivider(),
+      PopupMenuItem(child: ListTile(
+        leading:Icon(Icons.wifi,
+        color: Colors.amber.shade900,),
+        title: Text("ເຊື່ອມຕໍ່ກັບ Internet",
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 20
+        ),
+        ),
+        onTap: (){
+          Navigator.of(context).pop();
+        },
+      ))
+    ]);
   }
 
   Widget BNavagateBar(){
@@ -70,6 +117,7 @@ class _myHomePageState extends State<myHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('ຮ້ານ Cafe Neverland'),
+        actions: [PopUpMenuitemBar(),],
       ),
 
       body: screenPage[selectidx],
