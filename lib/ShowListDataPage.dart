@@ -13,6 +13,7 @@ class ShowListDataPage extends StatefulWidget {
 
 class _ShowListDataPageState extends State<ShowListDataPage> {
   String bid="";
+  String ? selectItem;
 
   var f = NumberFormat("#,##0.00");
 
@@ -36,6 +37,7 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
     txtbname.text = "";
     txtbprice.text = "";
     txtid.text = "";
+    fetchCategory();
     super.initState();
   }
 
@@ -47,6 +49,25 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
     txtid.dispose();
 
     super.dispose();
+  }
+
+  List datacat=[];
+  Future<void> fetchCategory() async{
+    try{
+      final String urlcategory="http://localhost:8000/category";
+      final respond = await http.get(Uri.parse(urlcategory));
+
+      if(respond.statusCode==200){
+        datacat.clear();
+        setState(() {
+          datacat = json.decode(respond.body);
+        });
+      }
+      print(datacat);
+    } catch(e){
+      print(e);
+
+    }
   }
 
   Future<void> DeleteData(String bid) async {
@@ -132,6 +153,33 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
     txtbname.text = "";
     txtbprice.text = "";
     txtbpage.text = "";
+  }
+ 
+  Widget LoadCategory(){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        border: Border.all(color: Colors.black,width: 1)
+      ),
+      child: DropdownButton(
+        isExpanded: true,
+        hint: Text("ກະລຸນາເລືອກປະເພດປື້ມ"),
+        
+        value: "2",
+        items: datacat.map((cat){
+        return DropdownMenuItem(
+          value: cat['catid'].toString(),
+          child: Text('${cat['catname']}'));
+        }).toList(),
+        onChanged: (val){
+          setState(() {
+            selectItem = val;
+          });
+          print(selectItem);
+        }),
+    );
   }
 
   Future<void> fetchOne(String bid) async {
@@ -219,6 +267,12 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
               fillColor: Colors.white),
           keyboardType: TextInputType.number, ////////ໃຫ້ຄີບອດເປັນແຕ່ຕົວເລກ
         ),
+        SizedBox(
+          height: 10,
+        ),
+
+        LoadCategory(),
+
         SizedBox(
           height: 10,
         ),

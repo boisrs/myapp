@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:myapp/HomePage.dart';
 import 'package:myapp/Login/LoginPage.dart';
 import 'package:myapp/MessagePage.dart';
 import 'package:myapp/ServicePage.dart';
@@ -175,8 +176,27 @@ class _myHomePageState extends State<myHomePage> {
           title: Text('ຮ້ານ Cafe Neverland'),
           actions: [PopUpMenuitemBar(),],
         ),
+        
       
-        body: screenPage[selectidx],
+        body: TabBarView(children: [Center(
+          child: HomePage(),
+        ),
+        Center(
+          child: Text("ຂາຍ"),
+        ),
+        Center(
+          child: Text("ສັ່ງຊື້"),
+        ),
+        Center(
+          child: Text("ນຳເຂົ້າ"),
+        ),
+        Center(
+          child: Text("ຄົ້ນຫາ"),
+        ),
+        Center(
+          child: Text("ລາຍງານ"),
+        ),
+        ],),
         drawer: drawer_menu(),
       
         bottomNavigationBar: BNavagateBar(),
