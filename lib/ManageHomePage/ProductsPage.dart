@@ -10,13 +10,6 @@ class ProductsPage extends StatefulWidget {
 class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('ຈັດການຂໍ້ມູນສິນຄ້າ'),
-      ),
-      body: Center(
-        child: Text('ຂໍ້ມູນສິນຄ້າ'),
-      ),
-    );
+    return const Placeholder();
   }
 }

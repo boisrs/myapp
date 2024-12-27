@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:myapp/ManageHomePage/CategoryPage.dart';
+import 'package:myapp/ManageHomePage/UnitPage.dart';
+import 'package:myapp/ManageHomePage/categoryPage.dart';
 import 'package:myapp/ManageHomePage/CurrentExchangePage.dart';
 import 'package:myapp/ManageHomePage/CustomerPage.dart';
 import 'package:myapp/ManageHomePage/EmployeePage.dart';
@@ -23,8 +24,8 @@ Icon(Icons.currency_exchange,color: iconColor[0],size: iconSize[0],),
 ];
 
 List routePage=[
-  ShowListDataPage(),
-  CategoryPage(),
+  UnitPage(),
+  categoryPage(),
   ProductsPage(),
   SupplierPage(),
   EmployeePage(),

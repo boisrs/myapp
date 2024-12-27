@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -13,7 +14,7 @@ class ShowListDataPage extends StatefulWidget {
 
 class _ShowListDataPageState extends State<ShowListDataPage> {
   String bid="";
-  String ? selectItem;
+  String? _selectItem;
 
   var f = NumberFormat("#,##0.00");
 
@@ -23,11 +24,12 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
   TextEditingController txtbname = TextEditingController();
   TextEditingController txtbprice = TextEditingController();
   TextEditingController txtbpage = TextEditingController();
+  TextEditingController txtcatid = TextEditingController();
 
   List data = [];
   final String url =
       "http://localhost:8000/book"; //ລັນໃນເຄື່ອງໃຫ້ໃສ local EX: http://localhost:8000/book //
-  //ລັນຢູ່ເຄື່ອງອື່ນໃສ່ IP ຂອງເຕື່ອງນັ້ນໆ EX :http://192.168.194.54:8000/book //
+  //ລັນຢູ່ເຄື່ອງອື່ນໃສ່ IP ຂອງເຕື່ອງນັ້ນໆ EX :http://192.168.253.54:8000/book //
 
   @override
   void initState() {
@@ -37,7 +39,7 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
     txtbname.text = "";
     txtbprice.text = "";
     txtid.text = "";
-    fetchCategory();
+    fetchCategory(); 
     super.initState();
   }
 
@@ -50,26 +52,25 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
 
     super.dispose();
   }
+  List datacatch=[];
 
-  List datacat=[];
   Future<void> fetchCategory() async{
     try{
-      final String urlcategory="http://localhost:8000/category";
-      final respond = await http.get(Uri.parse(urlcategory));
+      final String urlcatrgory="http://localhost:8000/category";
+      final respond = await http.get(Uri.parse(urlcatrgory));
 
       if(respond.statusCode==200){
-        datacat.clear();
+        datacatch.clear();
         setState(() {
-          datacat = json.decode(respond.body);
+          
+          datacatch = json.decode(respond.body);
         });
       }
-      print(datacat);
-    } catch(e){
+    print(datacatch);
+    }catch(e){
       print(e);
-
     }
   }
-
   Future<void> DeleteData(String bid) async {
     try {
       final String urldelete = "http://localhost:8000/book/$bid";
@@ -83,16 +84,17 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
     } catch (e) {}
   }
 
-  Future<void> EditBookData(String bid, String bname, String bprice, String bpage) async {
+  Future<void> EditBookData(String bid, String bname, String bprice, String bpage,String catid) async {
     try {
-      final String urladd = "http://localhost:8000/book/$bid";
-      final respon = await http.put(Uri.parse(urladd),
+      final String urledit = "http://localhost:8000/book/$bid";
+      final respon = await http.put(Uri.parse(urledit),
           headers: {"content-type": "application/json"},
           body: json.encode({
             
             "bookname": bname,
             "bprice": bprice,
-            "bpage": bpage
+            "bpage": bpage,
+            "catid":catid
           }));
 
       if (respon.statusCode == 200) {
@@ -109,7 +111,7 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
   }
 
   Future<void> AddBookData(
-      String bid, String bname, String bprice, String bpage) async {
+      String bid, String bname, String bprice, String bpage, String catid) async {
     try {
       final String urladd = "http://localhost:8000/book";
       final respon = await http.post(Uri.parse(urladd),
@@ -118,7 +120,8 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
             "bid": bid,
             "bookname": bname,
             "bprice": bprice,
-            "bpage": bpage
+            "bpage": bpage,
+            "catid": catid
           }));
 
       setState(() {
@@ -154,33 +157,6 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
     txtbprice.text = "";
     txtbpage.text = "";
   }
- 
-  Widget LoadCategory(){
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Colors.white,
-        border: Border.all(color: Colors.black,width: 1)
-      ),
-      child: DropdownButton(
-        isExpanded: true,
-        hint: Text("ກະລຸນາເລືອກປະເພດປື້ມ"),
-        
-        value: "2",
-        items: datacat.map((cat){
-        return DropdownMenuItem(
-          value: cat['catid'].toString(),
-          child: Text('${cat['catname']}'));
-        }).toList(),
-        onChanged: (val){
-          setState(() {
-            selectItem = val;
-          });
-          print(selectItem);
-        }),
-    );
-  }
 
   Future<void> fetchOne(String bid) async {
     final String urlone = "http://localhost:8000/book/$bid";
@@ -191,6 +167,36 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
       });
     }
     print(data);
+  }
+
+
+  String ? selectdata;
+  Widget LoadCategory(setState){
+    
+    return  Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        border: Border.all(color: Colors.black,width: 1)
+      ),
+      child: DropdownButton(
+        isExpanded: true,
+        hint: Text("ກະລຸນາເລືອກປະເພດປື້ມ"),
+        value: _selectItem,
+        items: datacatch.map((cat){
+        return DropdownMenuItem(
+          value: cat['catid'].toString(),
+          child: Text('${cat['catname']}'));
+        }).toList(),
+        onChanged: (val){
+          setState(() {
+            _selectItem = val;
+          });
+          
+          print(_selectItem);
+        }),
+    );
   }
 
   Widget TextBook() {
@@ -270,9 +276,7 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
         SizedBox(
           height: 10,
         ),
-
-        LoadCategory(),
-
+        LoadCategory(setState),
         SizedBox(
           height: 10,
         ),
@@ -289,11 +293,11 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
                       shadowColor: Color.fromARGB(255, 61, 104, 56)),
                   onPressed: () {
                     if(bid !=""){
-                      EditBookData(txtid.text, txtbname.text, txtbprice.text,txtbpage.text);
+                      EditBookData(txtid.text, txtbname.text, txtbprice.text,txtbpage.text,_selectItem.toString());
                       ClearText();
                       
                     } else
-                      AddBookData(txtid.text, txtbname.text, txtbprice.text,txtbpage.text);
+                      AddBookData(txtid.text, txtbname.text, txtbprice.text,txtbpage.text,_selectItem.toString());
                       ClearText();
                       Navigator.of(context).pop();
                     
@@ -318,7 +322,9 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
                       backgroundColor: Color.fromARGB(255, 223, 82, 82),
                       elevation: 15,
                       shadowColor: Color.fromARGB(255, 104, 56, 56)),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                   child: Text(
                     'ຍົກເລີກ',
                     style: TextStyle(
@@ -448,7 +454,7 @@ class _ShowListDataPageState extends State<ShowListDataPage> {
                                 txtbname.text = '${getdata['bookname']}';
                                 txtbprice.text = '${getdata['bprice']}';
                                 txtbpage.text = '${getdata['bpage']}';
-
+                                _selectItem = '${getdata['catid']}';
                                 AddBook();
                               },
                               icon: Icon(

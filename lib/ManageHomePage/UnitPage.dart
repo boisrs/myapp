@@ -1,19 +1,19 @@
+import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-
-class categoryPage extends StatefulWidget {
-  const categoryPage({super.key});
+class UnitPage extends StatefulWidget {
+  const UnitPage({super.key});
 
   @override
-  State<categoryPage> createState() => _categoryPageState();
+  State<UnitPage> createState() => _UnitPageState();
 }
 
-class _categoryPageState extends State<categoryPage> {
-   String catid="";
+class _UnitPageState extends State<UnitPage> {
+  String uid="";
 
 
   var f = NumberFormat("#,##0.00");
@@ -21,18 +21,18 @@ class _categoryPageState extends State<categoryPage> {
   TextEditingController txtsearch = TextEditingController();
 
 
-  TextEditingController txtcatid = TextEditingController();
-  TextEditingController txtcatname = TextEditingController();
+  TextEditingController txtuid = TextEditingController();
+  TextEditingController txtuname = TextEditingController();
 
   List data = [];
   final String url =
-      "http://localhost:8000/category";
+      "http://192.168.67.207:8000/tbunit";
   void initState() {
     fetchAllData();
     fetchOne("");
     txtsearch.text = "";
-    txtcatname.text = "";
-    txtcatid.text = "";
+    txtuname.text = "";
+    txtuid.text = "";
     fetchCategory(); 
     super.initState();
   }
@@ -40,8 +40,8 @@ class _categoryPageState extends State<categoryPage> {
   @override
   void dispose() {
     txtsearch.dispose();
-    txtcatname.dispose();
-    txtcatid.dispose();
+    txtuname.dispose();
+    txtuid.dispose();
 
     super.dispose();
   }
@@ -49,7 +49,7 @@ class _categoryPageState extends State<categoryPage> {
 
   Future<void> fetchCategory() async{
     try{
-      final String urlcatrgory="http://localhost:8000/category";
+      final String urlcatrgory="http://192.168.67.207:8000/tbunit";
       final respond = await http.get(Uri.parse(urlcatrgory));
 
       if(respond.statusCode==200){
@@ -64,9 +64,9 @@ class _categoryPageState extends State<categoryPage> {
       print(e);
     }
   }
-  Future<void> DeleteData(String catid) async {
+  Future<void> DeleteData(String uid) async {
     try {
-      final String urldelete = "http://localhost:8000/category/$catid";
+      final String urldelete = "http://192.168.67.207:8000/tbunit/$uid";
       final respon = await http.delete(Uri.parse(urldelete));
       if (respon.statusCode == 200) {
         print("ລຶບຂໍ້ມູນແລ້ວ ${respon.body}");
@@ -77,14 +77,14 @@ class _categoryPageState extends State<categoryPage> {
     } catch (e) {}
   }
 
-  Future<void> EditcatData(String catid, String catname) async {
+  Future<void> EditcatData(String uid, String uname) async {
     try {
-      final String urledit = "http://localhost:8000/category/$catid";
+      final String urledit = "http://192.168.67.207:8000/tbunit/$uid";
       final respon = await http.put(Uri.parse(urledit),
           headers: {"content-type": "application/json"},
           body: json.encode({
             
-            "catname": catname,
+            "uname": uname,
           }));
 
       if (respon.statusCode == 200) {
@@ -94,39 +94,54 @@ class _categoryPageState extends State<categoryPage> {
       }
 
       fetchAllData();
-      catid="";
+      uid="";
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> AddcatData(
-      String catid, String catname) async {
-    try {
-      final String urladd = "http://localhost:8000/category";
-      final respon = await http.post(Uri.parse(urladd),
-          headers: {"content-type": "application/json"},
-          body: json.encode({
-            "catid": catid.toString(),
-            "catname": catname,
-          }));
-
-      setState(() {
-        if (respon.statusCode == 200) {
+ Future<void> AddcatData(String uid, String uname) async {
+  try {
+    final String urladd = "http://192.168.67.207:8000/tbunit";
+    final respon = await http.post(
+      Uri.parse(urladd),
+      headers: {"content-type": "application/json"},
+      body: json.encode({
+        "uid": uid.toString(),
+        "uname": uname,
+      }),
+    );
+    setState(() {
+      if (respon.statusCode == 200) {
         print("ບັນທຶກຂໍ້ມູນແລ້ວ ${respon.body}");
-        catid="";
-      } else {
-        print("ເກີດຂໍ້ຜິດພາດ ${respon.statusCode}");
+        uid = "";
+      } else if (respon.statusCode == 400) {
+        print("ມີຂໍ້ມູນຫົວຫນ່ວຍນີ້ແລ້ວ Error ${respon.statusCode}");
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("ແຈ້ງເຕືອນ"),
+              content: Text("ມີຂໍ້ມູນຫົວຫນ່ວຍນີ້ແລ້ວ!"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                  Navigator.of(context).pop();
+                  },
+                  child: Text("ຕົກລົງ"),
+                ),
+              ],
+            );
+          },
+        );
       }
       fetchAllData();
-      
-      });
-
-      
-    } catch (e) {
-      print(e);
-    }
+    });
+  } catch (e) {
+    print(e);
   }
+}
+
 
   Future<void> fetchAllData() async {
     final respons = await http.get(Uri.parse(url));
@@ -139,12 +154,12 @@ class _categoryPageState extends State<categoryPage> {
   }
 
   void ClearText() {
-    txtcatid.text = "";
-    txtcatname.text = "";
+    txtuid.text = "";
+    txtuname.text = "";
   }
 
   Future<void> fetchOne(String catid) async {
-    final String urlone = "http://localhost:8000/category/$catid";
+    final String urlone = "http://192.168.67.207:8000/tbunit/$uid";
     final respons = await http.get(Uri.parse(urlone));
     if (respons.statusCode == 200) {
       setState(() {
@@ -162,12 +177,12 @@ class _categoryPageState extends State<categoryPage> {
     return Column(
       children: [
         TextField(
-          controller: txtcatid,
+          controller: txtuid,
           decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              label: Text('ລະຫັດສິນຄ້າ'),
+              label: Text('ລະຫັດຫົວຫນ່ວຍ'),
               prefixIcon: Icon(
                 Icons.book_rounded,
                 color: Colors.blue,
@@ -180,12 +195,12 @@ class _categoryPageState extends State<categoryPage> {
           height: 10,
         ),
         TextField(
-          controller: txtcatname,
+          controller: txtuname,
           decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              label: Text('ລາຍການສິນຄ້າ'),
+              label: Text('ລາຍການຫົວຫນ່ວຍ'),
               prefixIcon: Icon(
                 Icons.book,
                 color: Colors.blue,
@@ -214,12 +229,12 @@ class _categoryPageState extends State<categoryPage> {
                       elevation: 15,
                       shadowColor: Color.fromARGB(255, 61, 104, 56)),
                   onPressed: () {
-                    if(catid !=""){
-                      EditcatData(txtcatid.text, txtcatname.text);
+                    if(uid !=""){
+                      EditcatData(txtuid.text, txtuname.text);
                       ClearText();
                       
                     } else
-                      AddcatData(txtcatid.text, txtcatname.text);
+                      AddcatData(txtuid.text, txtuname.text);
                       ClearText();
                       Navigator.of(context).pop();
                     
@@ -275,12 +290,11 @@ class _categoryPageState extends State<categoryPage> {
           );
         });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("ຈັດການຂໍ້ມູນສິນຄ້າ"),
+        title: Text("ຈັດການຂໍ້ມູນຫົວຫນ່ວຍ"),
         bottom: PreferredSize(
             preferredSize: Size.fromHeight(60),
             child: Container(
@@ -346,14 +360,14 @@ class _categoryPageState extends State<categoryPage> {
                   children: [
                     ListTile(
                       leading: Text(
-                        getdata['catid'].toString(),
+                        getdata['uid'].toString(),
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 22,
                             fontWeight: FontWeight.bold),
                       ),
                       title: Text(
-                        getdata['catname'],
+                        getdata['uname'],
                         style: TextStyle(
                             color: Colors.blue.shade300,
                             fontSize: 20,
@@ -364,9 +378,9 @@ class _categoryPageState extends State<categoryPage> {
                         children: [
                           IconButton(
                               onPressed: () {
-                                catid ='${getdata['catid'].toString()}';
-                                txtcatid.text = '${getdata['catid']}';
-                                txtcatname.text = '${getdata['catname']}';
+                                uid ='${getdata['uid'].toString()}';
+                                txtuid.text = '${getdata['uid']}';
+                                txtuname.text = '${getdata['uname']}';
                         
                                 Addcategory();
                               },
@@ -384,13 +398,13 @@ class _categoryPageState extends State<categoryPage> {
                                     context: context,
                                     builder: (c) {
                                       return AlertDialog(
-                                        title: Text("ລຶບຂໍ້ມູນປື້ມ"),
+                                        title: Text("ລຶບຂໍ້ມູນຫົວຫນ່ວຍ"),
                                         content: Text(
                                             "ທ່ານຕ້ອງການລຶບຂໍ້ມູນນີ້ ຫຼື ບໍ່ [yes/no]"),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
-                                                DeleteData("${getdata['catid']}");
+                                                DeleteData("${getdata['uid']}");
                                                 Navigator.of(context).pop();
                                               },
                                               child: Text('Yes')),
